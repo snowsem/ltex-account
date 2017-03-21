@@ -12,7 +12,7 @@
 
                     <div>
                     @foreach($issues as $issue)
-                        {{$issue->title}} {{$issue->id}}
+                        {{$issue->title}} <a href="{{url('issues/'.$issue->id)}}">Читать</a>
                         <br>
                     @endforeach
                     </div>

@@ -20,5 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 Route::resource('comments', 'CommentController');
 Route::resource('issues', 'IssueController');
+Route::post('issues/{id}', 'IssueController@storeComment');
 Route::resource('samples', 'SampleController');
 Route::resource('outlets', 'OutletController');

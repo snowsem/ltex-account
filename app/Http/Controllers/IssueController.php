@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Issue;
+use App\IssueComment;
 use Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Validator;
@@ -17,6 +18,11 @@ class IssueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => []]);
+    }
+
     public function index()
     {
         $model = Issue::where('user_id','=', Auth::user()->id)->get();
@@ -143,5 +149,52 @@ class IssueController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function storeComment(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'text' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect('issues/'.$id)
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+
+            try {
+
+                $model = new IssueComment();
+                $model->text = $request->text;
+                $model->user_id = Auth::user()->id;
+                $model->issue_id = $id;
+                $model->save();
+
+                Session::flash('alert-class', 'alert-success');
+                Session::flash('message', 'Successfully created comment of issue!');
+                return Redirect::to('issues/'.$model->issue_id);
+
+            } catch (Exception $e) {
+
+                Session::flash('alert-class', 'alert-danger');
+                Session::flash('message', $e->getMessage());
+                return redirect('issues/'.$id)
+                    ->withErrors($validator)
+                    ->withInput();
+
+            } catch (QueryException $e) {
+
+                Session::flash('alert-class', 'alert-danger');
+                Session::flash('message', $e->getMessage());
+                return redirect('issues/'.$id)
+                    ->withErrors($validator)
+                    ->withInput();
+
+            }
+
+
+        }
     }
 }
