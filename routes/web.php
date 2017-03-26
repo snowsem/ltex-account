@@ -23,3 +23,7 @@ Route::resource('issues', 'IssueController');
 Route::post('issues/{id}', 'IssueController@storeComment');
 Route::resource('samples', 'SampleController');
 Route::resource('outlets', 'OutletController');
+Route::get('/profile', 'ProfileController@index');
+Route::post('/profile', 'ProfileController@update');
+Route::get('/profile/edit', 'ProfileController@edit');
+

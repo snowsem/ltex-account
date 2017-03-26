@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Session;
 
 class LoginController extends Controller
 {
@@ -35,5 +36,11 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+    }
+    public function authenticated($request, $user)
+    {
+        $fullName = $user->last_name.' '.$user->first_name.' '.$user->sure_name;
+        Session::flash('alert-class', 'alert-info');
+        Session::flash('message', 'Добро пожаловать '.$fullName.'!');
     }
 }
